@@ -42,6 +42,7 @@
             list-style-type: none;
             margin: 0;
             padding: 0;
+            margin-bottom: 150px;
         }
 
         #messages li {
@@ -115,6 +116,7 @@
                     socket.emit('chat message', "<b>" + localStorage.getItem('username') + ": </b>" + $('#m').val());
                     $('#m').val('');
                     $('#m').focus();
+                    $('html, body').animate({scrollTop:$(document).height()}, 'slow');                    
                 }
                 return false;
             });
