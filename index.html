@@ -60,13 +60,15 @@
             margin-bottom: 50px;
         }
 
-        #loginbtn {
+        #loginbtn,
+        #logoutbtn {
             font-size: 60px;
             border: 1px solid #ccc;
             background-color: #c30000;
             color: #fff;
             padding: 20px 30px;
             width: 100%;
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -77,6 +79,7 @@
         <button id="loginbtn" onclick="login()">GİRİŞ</button>
     </div>
     <div id="chatpanel">
+        <button id="logoutbtn" onclick="logout()">ÇIKIŞ</button>
         <ul id="messages"></ul>
         <form action="">
             <input id="m" autocomplete="off" /><button>></button>
@@ -117,6 +120,11 @@
             localStorage.setItem('username', $('#loginusername').val());
             $('#loginpanel').hide();
             $('#chatpanel').show();
+        }
+        function logout() {
+            localStorage.removeItem('username');            
+            $('#loginpanel').show();
+            $('#chatpanel').hide();
         }
     </script>
 </body>
