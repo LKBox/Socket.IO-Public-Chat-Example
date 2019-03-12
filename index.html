@@ -12,6 +12,7 @@
 
         body {
             font: 13px Helvetica, Arial;
+            background-color: #8c8c8c;
         }
 
         form {
@@ -85,7 +86,7 @@
             $('form').submit(function (e) {
                 e.preventDefault();
                 if ($('#m').val() != '') {
-                    socket.emit('chat message', "<b>" + username + ": </b>" + $('#m').val());
+                    socket.emit('chat message', "<b>" + localStorage.getItem('username') + ": </b>" + $('#m').val());
                     $('#m').val('');
                     $('#m').focus();
                 }
