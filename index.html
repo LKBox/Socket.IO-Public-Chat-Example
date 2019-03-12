@@ -115,13 +115,13 @@
                 if ($('#m').val() != '') {
                     socket.emit('chat message', "<b>" + localStorage.getItem('username') + ": </b>" + $('#m').val());
                     $('#m').val('');
-                    $('#m').focus();
-                    $('html, body').animate({scrollTop:$(document).height()}, 'slow');                    
+                    $('#m').focus();                                      
                 }
                 return false;
             });
             socket.on('chat message', function (msg) {
                 $('#messages').append($('<li>').html(msg));
+                $('html, body').animate({scrollTop:$(document).height()}, 'slow');  
             });
         });
 
