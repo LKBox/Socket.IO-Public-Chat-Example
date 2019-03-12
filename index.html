@@ -53,6 +53,13 @@
             background-color: #f3f3f3;
         }
 
+        #loginpanel {
+            width: 100%;
+            position: fixed;
+            bottom: 200px;
+            padding: 0px 100px;
+        }
+
         #loginusername {
             font-size: 60px;
             padding: 20px;
@@ -75,7 +82,7 @@
 
 <body>
     <div id="loginpanel">
-        <input id="loginusername" autocomplete="off" />
+        <input id="loginusername" placeholder="kullanıcı adı" autocomplete="off" />
         <button id="loginbtn" onclick="login()">GİRİŞ</button>
     </div>
     <div id="chatpanel">
@@ -93,7 +100,7 @@
 
             var username = localStorage.getItem('username');
 
-            if (username == '') {
+            if (username == '' || username == null) {
                 $('#loginpanel').show();
                 $('#chatpanel').hide();
             }
@@ -117,12 +124,14 @@
         });
 
         function login() {
-            localStorage.setItem('username', $('#loginusername').val());
-            $('#loginpanel').hide();
-            $('#chatpanel').show();
+            if ($('#loginusername').val() != '') {
+                localStorage.setItem('username', $('#loginusername').val());
+                $('#loginpanel').hide();
+                $('#chatpanel').show();
+            }
         }
         function logout() {
-            localStorage.removeItem('username');            
+            localStorage.removeItem('username');
             $('#loginpanel').show();
             $('#chatpanel').hide();
         }
