@@ -31,7 +31,7 @@
 
         form button {
             width: 10%;
-            background: rgb(130, 224, 255);
+            background: rgb(173, 0, 0);
             border: none;
             padding: 10px;
             font-size: 70px;
@@ -44,31 +44,50 @@
         }
 
         #messages li {
-            padding: 5px 10px;
+            padding: 20px 35px;
             font-size: 55px;
-        }
-
-        #messages li:nth-child(odd) {
-            background: #eee;
+            box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.6) inset;
+            margin-bottom: 20px;
+            border-radius: 50px;
+            background-color: #f3f3f3;
         }
     </style>
 </head>
 
 <body>
-    <ul id="messages"></ul>
-    <form action="">
-        <input id="m" autocomplete="off" /><button>></button>
-    </form>
+    <div id="loginpanel">
+        <input id="loginusername" autocomplete="off" />
+        <button onclick="login()">GİRİŞ</button>
+    </div>
+    <div id="chatpanel">
+        <ul id="messages"></ul>
+        <form action="">
+            <input id="m" autocomplete="off" /><button>></button>
+        </form>
+    </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
         $(function () {
             var socket = io();
+
+            var username = localStorage.getItem('username');
+
+            if (username != '') {
+                $('#loginpanel').show();
+                $('#chatpanel').hide();
+            }
+            else {
+                $('#loginpanel').hide();
+                $('#chatpanel').show();
+            }
+
             $('form').submit(function (e) {
                 e.preventDefault();
                 if ($('#m').val() != '') {
-                    socket.emit('chat message', $('#m').val());
+                    socket.emit('chat message', "<b>" + username + ": </b>" + $('#m').val());
                     $('#m').val('');
+                    $('#m').focus();
                 }
                 return false;
             });
@@ -76,6 +95,12 @@
                 $('#messages').append($('<li>').text(msg));
             });
         });
+
+        function login() {
+            localStorage.setItem('username', $('#loginusername').val());
+            $('#loginpanel').hide();
+            $('#chatpanel').show();
+        }
     </script>
 </body>
 
