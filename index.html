@@ -52,13 +52,29 @@
             border-radius: 50px;
             background-color: #f3f3f3;
         }
+
+        #loginusername {
+            font-size: 60px;
+            padding: 20px;
+            width: 100%;
+            margin-bottom: 50px;
+        }
+
+        #loginbtn {
+            font-size: 60px;
+            border: 1px solid #ccc;
+            background-color: #c30000;
+            color: #fff;
+            padding: 20px 30px;
+            width: 100%;
+        }
     </style>
 </head>
 
 <body>
     <div id="loginpanel">
         <input id="loginusername" autocomplete="off" />
-        <button onclick="login()">GİRİŞ</button>
+        <button id="loginbtn" onclick="login()">GİRİŞ</button>
     </div>
     <div id="chatpanel">
         <ul id="messages"></ul>
@@ -74,7 +90,7 @@
 
             var username = localStorage.getItem('username');
 
-            if (username != '') {
+            if (username == '') {
                 $('#loginpanel').show();
                 $('#chatpanel').hide();
             }
@@ -93,7 +109,7 @@
                 return false;
             });
             socket.on('chat message', function (msg) {
-                $('#messages').append($('<li>').text(msg));
+                $('#messages').append($('<li>').html(msg));
             });
         });
 
