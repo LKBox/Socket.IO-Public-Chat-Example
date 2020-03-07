@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Socket.IO chat</title>
+    <title>anlatreis</title>
     <style>
         * {
             margin: 0;
@@ -46,10 +46,11 @@
         }
         
         #messages li {
+            position: relative;
             padding: 20px 35px;
             font-size: 55px;
             box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.6) inset;
-            margin-bottom: 20px;
+            margin-bottom: 40px;
             border-radius: 50px;
             background-color: #f3f3f3;
         }
@@ -77,6 +78,19 @@
             padding: 20px 30px;
             width: 100%;
             margin-bottom: 20px;
+        }
+        
+        .datecont {
+            font-size: 30px;
+            position: absolute;
+            top: -20px;
+            right: 0px;
+            color: #e4e4e4;
+            background-color: #151515;
+            border-radius: 20px;
+            padding: 1px 15px;
+            box-shadow: 0px 20px 20px #a0a0a0;
+            opacity: 0.6;
         }
     </style>
 </head>
@@ -120,8 +134,9 @@
                 }
                 return false;
             });
-            socket.on('chat message', function(msg) {
-                $('#messages').append($('<li>').html(msg));
+            socket.on('chat message', function(msg, dateTime) {
+                var elmDateTime = '<div class="datecont">' + dateTime + '</div>';
+                $('#messages').append($('<li>').html(msg + elmDateTime));
                 $('html, body').animate({
                     scrollTop: $(document).height()
                 }, 'slow');
@@ -129,7 +144,10 @@
             socket.on('firstconn', function(msg, usr) {
                 if (msg != '' && usr == localStorage.getItem('username')) {
                     for (var i = 0; i < msg.length; i++) {
-                        $('#messages').append($('<li>').html(msg[i]));
+                        var elmMsg = msg[i].split('|')[0];
+                        var elmDateTime = '<div class="datecont">' + msg[i].split('|')[1] + '</div>';
+
+                        $('#messages').append($('<li>').html(elmMsg + elmDateTime));
                     }
                 }
             });

@@ -12,11 +12,20 @@ io.on('connection', function(socket) {
         io.emit('firstconn', stMessages, username);
     });
     socket.on('chat message', function(msg) {
-        stMessages.push(msg);
+        var today = new Date();
+        var date = today.getFullYear() + '.' +
+            ((today.getMonth() + 1) < 10 ? ('0' + (today.getMonth() + 1)) : (today.getMonth() + 1)) + '.' +
+            (today.getDate() < 10 ? ('0' + today.getDate()) : today.getDate());
+        var time = (today.getHours() < 10 ? ('0' + today.getHours()) : today.getHours()) + ":" +
+            (today.getMinutes() < 10 ? ('0' + today.getMinutes()) : today.getMinutes()) + ":" +
+            (today.getSeconds() < 10 ? ('0' + today.getSeconds()) : today.getSeconds());
+        var dateTime = date + ' ' + time;
+
+        stMessages.push(msg + '|' + dateTime);
         if (stMessages.length >= 200) {
             stMessages.shift();
         }
-        io.emit('chat message', msg);
+        io.emit('chat message', msg, dateTime);
     });
 });
 
