@@ -9,12 +9,12 @@
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             font: 13px Helvetica, Arial;
             background-color: #8c8c8c;
         }
-
+        
         form {
             background: #000;
             padding: 9px;
@@ -22,14 +22,14 @@
             bottom: 0;
             width: 100%;
         }
-
+        
         form input {
             border: 0;
             padding: 10px;
             width: 90%;
             font-size: 70px;
         }
-
+        
         form button {
             width: 10%;
             background: rgb(173, 0, 0);
@@ -37,14 +37,14 @@
             padding: 10px;
             font-size: 70px;
         }
-
+        
         #messages {
             list-style-type: none;
             margin: 0;
             padding: 0;
             margin-bottom: 150px;
         }
-
+        
         #messages li {
             padding: 20px 35px;
             font-size: 55px;
@@ -53,21 +53,21 @@
             border-radius: 50px;
             background-color: #f3f3f3;
         }
-
+        
         #loginpanel {
             width: 100%;
             position: fixed;
             bottom: 200px;
             padding: 0px 100px;
         }
-
+        
         #loginusername {
             font-size: 60px;
             padding: 20px;
             width: 100%;
             margin-bottom: 50px;
         }
-
+        
         #loginbtn,
         #logoutbtn {
             font-size: 60px;
@@ -80,6 +80,7 @@
         }
     </style>
 </head>
+
 <body>
     <div id="loginpanel">
         <input id="loginusername" placeholder="kullanıcı adı" autocomplete="off" />
@@ -95,7 +96,7 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
-        $(function () {
+        $(function() {
             var socket = io();
 
             var username = localStorage.getItem('username');
@@ -103,34 +104,48 @@
             if (username == '' || username == null) {
                 $('#loginpanel').show();
                 $('#chatpanel').hide();
-            }
-            else {
+            } else {
                 $('#loginpanel').hide();
                 $('#chatpanel').show();
+
+                socket.emit('firstconn', username);
             }
 
-            $('form').submit(function (e) {
+            $('form').submit(function(e) {
                 e.preventDefault();
                 if ($('#m').val() != '') {
-                    socket.emit('chat message', "<b>" + localStorage.getItem('username') + ": </b>" + $('#m').val());
+                    socket.emit('chat message', "<b>" + localStorage.getItem('username').split('|')[0] + ": </b>" + $('#m').val());
                     $('#m').val('');
-                    $('#m').focus();                                      
+                    $('#m').focus();
                 }
                 return false;
             });
-            socket.on('chat message', function (msg) {
+            socket.on('chat message', function(msg) {
                 $('#messages').append($('<li>').html(msg));
-                $('html, body').animate({scrollTop:$(document).height()}, 'slow');  
+                $('html, body').animate({
+                    scrollTop: $(document).height()
+                }, 'slow');
+            });
+            socket.on('firstconn', function(msg, usr) {
+                if (msg != '' && usr == localStorage.getItem('username')) {
+                    for (var i = 0; i < msg.length; i++) {
+                        $('#messages').append($('<li>').html(msg[i]));
+                    }
+                }
             });
         });
 
         function login() {
             if ($('#loginusername').val() != '') {
-                localStorage.setItem('username', $('#loginusername').val());
+                localStorage.setItem('username', $('#loginusername').val() + '|' + Math.floor(Math.random() * 1000));
                 $('#loginpanel').hide();
                 $('#chatpanel').show();
+
+                var socket = io();
+                socket.emit('firstconn', localStorage.getItem('username'));
             }
         }
+
         function logout() {
             localStorage.removeItem('username');
             $('#loginpanel').show();
