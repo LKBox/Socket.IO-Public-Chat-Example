@@ -1,7 +1,9 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var stMessages = [];
+var fs = require('fs');
+
+var logger;
 
 app.get('/', function(req, res) {
     res.sendFile(__dirname + '/index.html');
@@ -9,6 +11,16 @@ app.get('/', function(req, res) {
 
 io.on('connection', function(socket) {
     socket.on('firstconn', function(username) {
+        var filedata = fs.readFileSync('log.txt', 'utf-8');
+        var stMessages = filedata.split('\r\n');
+        stMessages.pop();
+
+        if (stMessages.length >= 500) {
+            stMessages.splice(0, 200);
+
+            fs.writeFile('log.txt', stMessages.join('\r\n') + '\r\n', function() { console.log('removelogdone') });
+        }
+
         io.emit('firstconn', stMessages, username);
     });
     socket.on('chat message', function(msg) {
@@ -21,14 +33,16 @@ io.on('connection', function(socket) {
             (today.getSeconds() < 10 ? ('0' + today.getSeconds()) : today.getSeconds());
         var dateTime = date + ' ' + time;
 
-        stMessages.push(msg + '|' + dateTime);
-        if (stMessages.length >= 200) {
-            stMessages.shift();
-        }
+        logger.write(msg + '|' + dateTime + '\r\n');
+
         io.emit('chat message', msg, dateTime);
     });
 });
 
 http.listen(process.env.PORT || 3000, function() {
     console.log('listening on *:' + process.env.PORT);
+
+    logger = fs.createWriteStream('log.txt', {
+        flags: 'a' // 'a' means appending (old data will be preserved)
+    });
 });
