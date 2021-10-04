@@ -103,6 +103,9 @@
 </head>
 
 <body>
+    <audio id="popaudio">
+        <source src="https://freesound.org/data/previews/439/439184_7268008-lq.mp3" type="audio/mpeg">
+    </audio>
     <div id="loginpanel">
         <input id="loginusername" placeholder="kullanıcı adı" autocomplete="off" />
         <button id="loginbtn" onclick="login()">GİRİŞ</button>
@@ -147,6 +150,8 @@
                 $('html, body').animate({
                     scrollTop: $(document).height()
                 }, 'slow');
+                var audio = document.getElementById('popaudio');
+                audio.play();
             });
             socket.on('firstconn', function(msg, usr) {
                 if (msg != '' && usr == localStorage.getItem('username')) {
