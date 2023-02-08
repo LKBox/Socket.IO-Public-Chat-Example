@@ -28,7 +28,7 @@ io.on('connection', function(socket) {
         var date = today.getFullYear() + '.' +
             ((today.getMonth() + 1) < 10 ? ('0' + (today.getMonth() + 1)) : (today.getMonth() + 1)) + '.' +
             (today.getDate() < 10 ? ('0' + today.getDate()) : today.getDate());
-        var time = (today.getHours() < 10 ? ('0' + today.getHours()) : today.getHours()) + ":" +
+        var time = ((today.getHours()+3) < 10 ? ('0' + (today.getHours()+3)) : (today.getHours()+3)) + ":" +
             (today.getMinutes() < 10 ? ('0' + today.getMinutes()) : today.getMinutes()) + ":" +
             (today.getSeconds() < 10 ? ('0' + today.getSeconds()) : today.getSeconds());
         var dateTime = date + ' ' + time;
